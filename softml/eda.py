@@ -7,14 +7,19 @@ from .plots import histogram, boxplot, scatter, violin, pairplot
 
 def quick_eda(df: pd.DataFrame, target: str | None=None, show_plots: bool=True) -> dict:
     """Return a summary dict and optionally render plots + correlation matrix."""
+    try:
+        desc = df.describe(include='all', datetime_is_numeric=True)
+    except TypeError:
+        desc = df.describe(include='all')
+    
     summary = {
         "shape": df.shape,
         "dtypes": df.dtypes.astype(str).to_dict(),
         "missing_pct": (df.isna().mean() * 100).round(2).to_dict(),
         "head": df.head(5),
-        "describe": df.describe(include='all', datetime_is_numeric=True)
+        "describe": desc,
     }
-
+    
     num_df = df.select_dtypes(include=[np.number])
     if not num_df.empty:
         corr = num_df.corr(numeric_only=True)
