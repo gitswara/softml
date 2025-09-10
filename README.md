@@ -6,7 +6,7 @@
 ## Quickstart (Colab)
 
 ```python
-!pip install git+https://github.com/YOUR_USERNAME/softml.git
+!pip install git+https://github.com/gitswara/softml.git
 import softml as sm
 
 # Create a dataset interactively

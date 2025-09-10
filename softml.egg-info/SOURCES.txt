@@ -1,0 +1,12 @@
+README.md
+pyproject.toml
+softml/__init__.py
+softml/datasets.py
+softml/eda.py
+softml/plots.py
+softml/utils.py
+softml.egg-info/PKG-INFO
+softml.egg-info/SOURCES.txt
+softml.egg-info/dependency_links.txt
+softml.egg-info/requires.txt
+softml.egg-info/top_level.txt
