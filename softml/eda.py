@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 import numpy as np
 import pandas as pd
@@ -9,12 +10,18 @@ def quick_eda(df: pd.DataFrame, target: str | None=None, show_plots: bool=True) 
     Return a summary dict and optionally render plots + correlation matrix.
     summary keys: shape, dtypes, missing_pct, head, describe, (optional) corr
     """
+
+    try:
+        desc = df.describe(include='all', datetime_is_numeric=True)
+    except TypeError:
+        desc = df.describe(include='all')
+    
     summary = {
         "shape": df.shape,
         "dtypes": df.dtypes.astype(str).to_dict(),
         "missing_pct": (df.isna().mean() * 100).round(2).to_dict(),
         "head": df.head(5),
-        "describe": df.describe(include='all', datetime_is_numeric=True)
+        "describe": desc,
     }
 
     num_df = df.select_dtypes(include=[np.number])
