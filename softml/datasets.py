@@ -1,9 +1,9 @@
-
 from __future__ import annotations
 from pathlib import Path
 from typing import Any, Iterable, Sequence, Optional, Union, List
 import numpy as np
 import pandas as pd
+from sklearn.datasets import load_iris as _load_iris
 
 def _auto_cast(x: str) -> Any:
     s = x.strip()
@@ -30,6 +30,10 @@ def create_dataset_interactive(
     stop_word: str = "done",
     echo: bool = True,
 ) -> pd.DataFrame:
+    """
+    Prompt user for columns and rows, return DataFrame and write CSV.
+    Works well in Colab/terminals. Type 'done' on a blank line to finish rows.
+    """
     sp = Path(save_path)
     if not fields:
         print("Enter column names separated by commas (e.g., name,age,city):")
@@ -39,7 +43,11 @@ def create_dataset_interactive(
             raise ValueError("No columns provided.")
     if echo:
         print(f"[ok] Columns: {fields}")
-    print(f"""Enter one row per line using commas for fields.\n- Order must match: {fields}\n- Type '{stop_word}' on an empty line to finish.""" )
+    print(
+        f"Enter one row per line using commas for fields.\n"
+        f"- Order must match: {fields}\n"
+        f"- Type '{stop_word}' on an empty line to finish."
+    )
     rows: List[List[Any]] = []
     while True:
         try:
@@ -67,6 +75,7 @@ def create_dataset_from_lists(
     save_path: Union[str, Path] = "my_dataset.csv",
     cast: bool = False,
 ) -> pd.DataFrame:
+    """Programmatic creation; good for teacher demos."""
     if cast:
         def _cast_row(row): return [_auto_cast(str(v)) for v in row]
         rows = [_cast_row(r) for r in data_rows]
@@ -75,3 +84,10 @@ def create_dataset_from_lists(
     df = pd.DataFrame(rows, columns=list(fields))
     df.to_csv(save_path, index=False)
     return df
+
+def load_iris_data() -> pd.DataFrame:
+    """
+    Load the classic Iris dataset as a DataFrame (features + 'target').
+    """
+    iris = _load_iris(as_frame=True)
+    return iris.frame

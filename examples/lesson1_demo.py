@@ -8,8 +8,8 @@ Demo:
 """
 import pandas as pd
 from sklearn.datasets import load_iris
-from teenml.eda import quick_eda
-from teenml.datasets import create_dataset_interactive
+from softml.eda import quick_eda
+from softml.datasets import create_dataset_interactive
 
 iris = load_iris(as_frame=True)
 df = iris.frame
