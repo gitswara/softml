@@ -23,19 +23,34 @@ def quick_eda(df: pd.DataFrame, target: str | None=None, show_plots: bool=True) 
         "head": df.head(5),
         "describe": desc,
     }
-
+    
     num_df = df.select_dtypes(include=[np.number])
     if not num_df.empty:
         corr = num_df.corr(numeric_only=True)
         summary["corr"] = corr
+
         if show_plots:
-            plt.figure(figsize=(6,5))
-            plt.imshow(corr, interpolation="nearest")
-            plt.title("Correlation (numeric)")
-            plt.colorbar()
-            plt.xticks(range(len(corr.columns)), corr.columns, rotation=90)
-            plt.yticks(range(len(corr.columns)), corr.columns)
-            plt.tight_layout(); plt.show()
+            fig, ax = plt.subplots(figsize=(6, 5))
+            cax = ax.matshow(corr, cmap="coolwarm", vmin=-1, vmax=1)
+            fig.colorbar(cax)
+
+            # Set axis ticks
+            ax.set_xticks(range(len(corr.columns)))
+            ax.set_yticks(range(len(corr.columns)))
+            ax.set_xticklabels(corr.columns, rotation=90)
+            ax.set_yticklabels(corr.columns)
+
+            # Annotate each cell with correlation value
+            for i in range(len(corr.columns)):
+                for j in range(len(corr.columns)):
+                    ax.text(
+                        j, i, f"{corr.iloc[i, j]:.2f}",
+                        ha="center", va="center", color="black"
+                    )
+
+            plt.title("Correlation Matrix (numeric)", pad=20)
+            plt.tight_layout()
+            plt.show()
 
     if show_plots:
         # Histograms for up to 4 numeric columns
